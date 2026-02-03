@@ -1,5 +1,7 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>CodeRush Certificate Portal</title>
@@ -14,48 +16,20 @@
         }
 
         body {
-            background: linear-gradient(135deg, #eef2ff, #f8fafc);
-            color: #0f172a;
+            background: linear-gradient(135deg, #ffffff 0%, #e8f0fe 100%);
+            color: #202124;
         }
-
-        /* NAVBAR */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 60px;
-        }
-
-        .logo {
-            font-size: 22px;
-            font-weight: bold;
-            color: #1e3a8a;
-        }
-
-        .nav-links a {
-            margin-left: 30px;
-            text-decoration: none;
-            color: #334155;
-            font-weight: 500;
-        }
-
-        .btn-demo {
-            background: #1e3a8a;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 25px;
-        }
-
-        /* HERO */
         .hero {
             text-align: center;
-            padding: 100px 20px 60px;
+            padding: 80px 20px 40px;
+            position: relative;
+            overflow: hidden;
         }
 
         .badge {
             display: inline-block;
-            background: #e0e7ff;
-            color: #3730a3;
+            background: #e8f0fe;
+            color: #1a73e8;
             padding: 6px 14px;
             border-radius: 20px;
             font-size: 14px;
@@ -63,84 +37,104 @@
         }
 
         .hero h1 {
-            font-size: 48px;
-            max-width: 800px;
+            font-size: 52px;
+            max-width: 900px;
             margin: auto;
             line-height: 1.2;
+            font-weight: 600;
         }
 
         .hero p {
             margin-top: 20px;
             font-size: 18px;
-            color: #475569;
+            color: #5f6368;
         }
 
         .cta-btn {
             margin-top: 40px;
-            padding: 16px 30px;
-            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            padding: 16px 36px;
+            background: #1a73e8;
             color: white;
             border: none;
             border-radius: 30px;
             font-size: 18px;
             cursor: pointer;
             transition: 0.3s ease;
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
         }
 
         .cta-btn:hover {
-            transform: scale(1.05);
+            background: #1669c1;
+            transform: translateY(-2px);
         }
 
-        /* POPUP */
+        .hero-images {
+            margin-top: 70px;
+            position: relative;
+        }
+
+        .hero-images img.main-graphic {
+            width: 85%;
+            max-width: 900px;
+        }
+
         .popup {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: #1e293b;
+            background: #34a853;
             color: white;
             padding: 15px 20px;
             border-radius: 10px;
             display: none;
             animation: slideUp 0.5s ease forwards;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         footer {
             text-align: center;
             padding: 40px;
             font-size: 14px;
-            color: #64748b;
+            color: #5f6368;
+        }
+
+        @media(max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .cta-btn {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <!-- NAVBAR -->
-    <div class="navbar">
-        <div class="logo">
-            <!-- LOGO PLACEHOLDER -->
-            [LOGO HERE]
-        </div>
-        <div class="nav-links">
-            <a href="#">About</a>
-            <a href="#">FAQs</a>
-            <a href="#" class="btn-demo">Contact</a>
-        </div>
-    </div>
-
-    <!-- HERO SECTION -->
     <section class="hero">
         <div class="badge">🏆 CodeRush Hackathon 2026</div>
         <h1>Generate Your Official Participation & Achievement Certificate</h1>
         <p>Verify your registered email and download your personalized certificate instantly.</p>
         <button class="cta-btn" onclick="goToVerify()">Generate Certificate →</button>
+
+        <div class="hero-images">
+            <img src="{% static 'images/main-illustration.png' %}" class="main-graphic" alt="Certificate Illustration">
+        </div>
     </section>
 
-    <!-- POPUP -->
     <div class="popup" id="popup">
         🎉 Certificates are now live!
     </div>
@@ -154,8 +148,7 @@
             window.location.href = "/verify/";
         }
 
-        // Show popup after page load
-        window.onload = function() {
+        window.onload = function () {
             setTimeout(() => {
                 document.getElementById("popup").style.display = "block";
             }, 1500);
@@ -163,4 +156,5 @@
     </script>
 
 </body>
+
 </html>
