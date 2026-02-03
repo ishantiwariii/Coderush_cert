@@ -78,8 +78,8 @@ def generate_certificate(request):
         name = participant.name.upper()
 
         # ---------- AUTO FONT RESIZE ----------
-        font_size = 50
-        max_width = img.width * 0.65
+        font_size = 48
+        max_width = img.width * 0.60
         font = ImageFont.truetype(font_path, font_size)
 
         while font_size > 30:
@@ -99,7 +99,7 @@ def generate_certificate(request):
         x = (img.width - text_width) / 2 - bbox[0]
 
         # 🔥 Correct vertical position for name on this certificate
-        name_center_y = 540
+        name_center_y = 545
 
         y = name_center_y - (text_height / 2) - bbox[1]
 
