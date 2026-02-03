@@ -4,15 +4,21 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY
-SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-secret-key')
+# ================= SECURITY =================
+SECRET_KEY = os.environ.get('SECRET_KEY')  # Must be set on Render
 
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = os.environ.get('DEBUG') == 'True'  # False in production
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://coderush-certificate.onrender.com",
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
-# APPLICATIONS
+# ================= APPLICATIONS =================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,6 +60,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'certsite.wsgi.application'
 
 
+# ================= DATABASE =================
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
@@ -69,7 +76,7 @@ else:
     }
 
 
-# PASSWORD VALIDATION
+# ================= PASSWORD VALIDATION =================
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -78,17 +85,18 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# INTERNATIONALIZATION
+# ================= INTERNATIONALIZATION =================
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
 
-# STATIC FILES
+# ================= STATIC FILES =================
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Only keep this if a "static" folder exists in project root
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
@@ -96,5 +104,5 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# DEFAULT PRIMARY KEY FIELD TYPE
+# ================= DEFAULT PK =================
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
