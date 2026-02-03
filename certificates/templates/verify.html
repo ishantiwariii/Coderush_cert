@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Verify & Get Certificate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #eef2ff, #f8fafc);
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            max-width: 420px;
+            margin: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        h2 { margin-bottom: 20px; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #2563eb, #4f46e5);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .error { color: red; margin-top: 10px; }
+        .success { color: green; margin-top: 10px; }
+        .note { font-size: 13px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Generate Your Certificate</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <!-- 🔁 ALREADY GENERATED -->
+    {% if already_generated %}
+        <p class="success">Your certificate has already been generated ✅</p>
+        <p>Name on certificate: <b>{{ participant.name }}</b></p>
+
+        <form action="/generate-certificate/" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="email" value="{{ participant.email }}">
+            <button type="submit">Download Certificate Again</button>
+        </form>
+
+    {% else %}
+
+        <!-- 📧 EMAIL FORM -->
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="email" name="email" placeholder="Enter your registered email"
+                   value="{{ email|default:'' }}" required
+                   {% if email_valid or name_locked %} readonly {% endif %}>
+
+            <!-- ✍️ NAME INPUT AFTER EMAIL VERIFIED -->
+            {% if email_valid and not name_locked %}
+                <input type="text" name="name" placeholder="Enter name for certificate" required>
+                <p class="note">This name cannot be changed later.</p>
+            {% endif %}
+
+            {% if not name_locked %}
+                <button type="submit">Continue</button>
+            {% endif %}
+        </form>
+
+        <!-- 🔒 NAME LOCKED BUT NOT GENERATED YET -->
+        {% if name_locked %}
+            <p class="success">Name locked: <b>{{ participant.name }}</b></p>
+
+            <form action="/generate-certificate/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ participant.email }}">
+                <button type="submit">Generate Certificate</button>
+            </form>
+        {% endif %}
+
+    {% endif %}
+</div>
+
+</body>
+</html>
