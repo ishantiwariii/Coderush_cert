@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Verify & Get Certificate</title>
@@ -35,7 +36,7 @@
             border-radius: 18px;
             width: 100%;
             max-width: 440px;
-            box-shadow: 0 20px 45px rgba(26,115,232,0.15);
+            box-shadow: 0 20px 45px rgba(26, 115, 232, 0.15);
             text-align: center;
         }
 
@@ -56,7 +57,7 @@
         input:focus {
             outline: none;
             border-color: #1a73e8;
-            box-shadow: 0 0 0 2px rgba(26,115,232,0.15);
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.15);
         }
 
         button {
@@ -70,7 +71,7 @@
             font-size: 16px;
             cursor: pointer;
             transition: 0.3s ease;
-            box-shadow: 0 4px 14px rgba(26,115,232,0.4);
+            box-shadow: 0 4px 14px rgba(26, 115, 232, 0.4);
         }
 
         button:hover {
@@ -78,9 +79,21 @@
             transform: translateY(-2px);
         }
 
-        .error { color: #d93025; margin-top: 12px; }
-        .success { color: #188038; margin-top: 12px; }
-        .note { font-size: 13px; color: #5f6368; margin-top: 6px; }
+        .error {
+            color: #d93025;
+            margin-top: 12px;
+        }
+
+        .success {
+            color: #188038;
+            margin-top: 12px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #5f6368;
+            margin-top: 6px;
+        }
 
         footer {
             text-align: center;
@@ -90,7 +103,9 @@
         }
 
         @media(max-width: 600px) {
-            .card { padding: 35px 25px; }
+            .card {
+                padding: 35px 25px;
+            }
         }
     </style>
 </head>
@@ -103,47 +118,47 @@
             <h2>Generate Your Certificate</h2>
 
             {% if error %}
-                <p class="error">{{ error }}</p>
+            <p class="error">{{ error }}</p>
             {% endif %}
 
             {% if already_generated %}
-                <p class="success">Your certificate has already been generated ✅</p>
-                <p>Name on certificate: <b>{{ participant.name }}</b></p>
+            <p class="success">Your certificate has already been generated ✅</p>
+            <p>Name on certificate: <b>{{ participant.name }}</b></p>
 
-                <form action="/generate-certificate/" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="email" value="{{ participant.email }}">
-                    <button type="submit">Download Certificate Again</button>
-                </form>
+            <form action="/generate-certificate/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ participant.email }}">
+                <button type="submit">Download Certificate Again</button>
+            </form>
 
             {% else %}
 
-                <form method="POST">
-                    {% csrf_token %}
+            <form method="POST">
+                {% csrf_token %}
 
-                    <input type="email" name="email" placeholder="Enter your registered email"
-                        value="{{ email|default:'' }}" required
-                        {% if email_valid or name_locked %} readonly {% endif %}>
+                <input type="email" name="email" placeholder="Enter your registered email"
+                    value="{{ email|default:'' }}" required {% if email_valid or name_locked %} readonly {% endif %}>
 
-                    {% if email_valid and not name_locked %}
-                        <input type="text" name="name" placeholder="Enter name for certificate" required>
-                        <p class="note">This name cannot be changed later.</p>
-                    {% endif %}
-
-                    {% if not name_locked %}
-                        <button type="submit">Continue</button>
-                    {% endif %}
-                </form>
-
-                {% if name_locked %}
-                    <p class="success">Name locked: <b>{{ participant.name }}</b></p>
-
-                    <form action="/generate-certificate/" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="email" value="{{ participant.email }}">
-                        <button type="submit">Generate Certificate</button>
-                    </form>
+                {% if email_valid and not name_locked %}
+                <input type="text" name="name" value="{{ participant.name }}" placeholder="Enter name for certificate"
+                    required>
+                <p class="note">You can edit your name before generating the certificate.</p>
                 {% endif %}
+
+                {% if not name_locked %}
+                <button type="submit">Continue</button>
+                {% endif %}
+            </form>
+
+            {% if name_locked %}
+            <p class="success">Name locked: <b>{{ participant.name }}</b></p>
+
+            <form action="/generate-certificate/" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="email" value="{{ participant.email }}">
+                <button type="submit">Generate Certificate</button>
+            </form>
+            {% endif %}
 
             {% endif %}
         </div>
@@ -154,4 +169,5 @@
     </footer>
 
 </body>
+
 </html>

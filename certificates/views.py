@@ -22,27 +22,27 @@ def verify_page(request):
             context["email"] = email
             context["participant"] = participant
 
-            # If certificate already generated → lock name
+            # Certificate already generated → everything locked
             if participant.certificate_generated:
                 context["name_locked"] = True
                 context["already_generated"] = True
                 return render(request, "verify.html", context)
 
-            # Name already saved earlier
-            if participant.name:
-                context["name_locked"] = True
+            # If user submitted a name (editing or first time)
+            if name:
+                clean_name = name.strip()
 
-            # First-time name submission
-            elif name:
-                if len(name.strip()) < 3:
+                if len(clean_name) < 3:
                     context["error"] = "Please enter a valid name."
+                    context["email_valid"] = True
                     return render(request, "verify.html", context)
 
-                participant.name = name.strip().title()
+                participant.name = clean_name.title()
                 participant.save()
                 context["name_locked"] = True
 
             else:
+                # Just email verified, show name field (pre-filled)
                 context["email_valid"] = True
 
         except Participant.DoesNotExist:
